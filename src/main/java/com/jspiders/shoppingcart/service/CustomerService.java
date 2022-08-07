@@ -13,7 +13,7 @@ public interface CustomerService {
 
 	ResponseStructure<Customer> validateCustomer(String email, String Password);
 
-	ResponseStructure<Customer> findCustomerById(int id);
+	ResponseStructure<Customer> findCustomerById(int customerId);
 
 	ResponseStructure<List<Customer>> fetchAllCustomers();
 }

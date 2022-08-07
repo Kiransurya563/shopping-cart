@@ -5,13 +5,13 @@ import java.util.Optional;
 
 import com.jspiders.shoppingcart.dto.Merchant;
 
-public interface MerchantDAO {
+public interface MerchantDao {
 
 	Merchant saveMerchant(Merchant merchant);
 
 	Merchant validateMerchant(String email, String Password);
 
-	Optional<Merchant> findMerchantById(int id);
+	Optional<Merchant> findMerchantById(int merchantId);
 
 	List<Merchant> fetchAllMerchants();
 }

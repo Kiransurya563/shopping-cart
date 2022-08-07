@@ -22,7 +22,6 @@ public class ShoppingCartApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ShoppingCartApplication.class, args);
 	}
-
 	@SuppressWarnings("rawtypes")
 	List<VendorExtension> vendorExtensions = new ArrayList<VendorExtension>();
 	Contact contact = new Contact("Jspiders", "https://jspiders.com/", "enquiry@jspiders.com");

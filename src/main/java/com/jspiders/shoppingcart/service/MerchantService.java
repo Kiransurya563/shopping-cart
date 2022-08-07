@@ -13,7 +13,11 @@ public interface MerchantService {
 
 	ResponseStructure<Merchant> validateMerchant(String email, String Password);
 
-	ResponseStructure<Merchant> findMerchantById(int id);
+	ResponseStructure<Merchant> findMerchantById(int merchantId);
 
 	ResponseStructure<List<Merchant>> fetchAllMerchant();
+
+	ResponseStructure<List<Merchant>> changeMerchantStatus(int merchantId);
+
+	ResponseStructure<Merchant> deleteMerchant(int merchantId);
 }

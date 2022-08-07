@@ -11,7 +11,7 @@ public interface CustomerDao {
 
 	Customer validateCustomer(String email, String Password);
 
-	Optional<Customer> findCustomerById(int id);
+	Optional<Customer> findCustomerById(int customerId);
 
 	List<Customer> fetchAllCustomers();
 
