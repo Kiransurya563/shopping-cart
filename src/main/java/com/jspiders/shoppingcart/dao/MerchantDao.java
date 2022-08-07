@@ -14,4 +14,5 @@ public interface MerchantDao {
 	Optional<Merchant> findMerchantById(int merchantId);
 
 	List<Merchant> fetchAllMerchants();
+
 }
