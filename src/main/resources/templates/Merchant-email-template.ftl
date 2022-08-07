@@ -19,11 +19,11 @@
 							</div>
 							
 							<div style="font-size: 32px; color: crimson;">
-								<br> Dear ${merchant.getMer_name()} <br><br>
+								<br> Dear ${merchant.getName()} <br><br>
 							</div>
 							<div style="font-size: 24px; color: blue;">
 								<br> Click below link to verify your account creation...<br> 
-								<h3><a style="font-size: 24px; color: blue;" href="http://localhost:8080/merchants/setpassword?token=${merchant.getToken()}">Verify my account</a></h3>
+								<h3><a style="font-size: 24px; color: blue;" href="http://localhost:8080/merchants/save/${merchant.getToken()}">Verify my account</a></h3>
 								<br><h3 style="font-size: 32px; color: crimson;">Thank you..</h3>
 								  <b><h2 style="font-size: 24px; color: black;">Online Shopping Cart Team</h2></b>
 							</div>

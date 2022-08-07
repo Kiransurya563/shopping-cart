@@ -31,11 +31,11 @@ public class MerchantServiceImpl implements MerchantService {
 		merchant.setStatus("inactive");
 		this.merchant = merchant;
 
-		merchantMailVerification.SendVerificationEmail(this.merchant);
+		merchantMailVerification.SendVerificationEmail(merchant);
 
 		ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
 
-		structure.setData(this.merchant);
+		structure.setData(merchant);
 		structure.setStatusCode(HttpStatus.CREATED.value());
 		structure.setMessage("Check mail for verification link");
 		return structure;
@@ -53,7 +53,7 @@ public class MerchantServiceImpl implements MerchantService {
 			if (merchant1 != null) {
 				structure.setData(merchant1);
 				structure.setStatusCode(HttpStatus.CREATED.value());
-				structure.setMessage("Account Registered succesfully, contact admin to make account active");
+				structure.setMessage("Account Registered succesfully, please wait for 24 hours to get account activated");
 				return structure;
 			} else {
 				throw new UserDefinedException("Account did not get Created");
@@ -75,7 +75,7 @@ public class MerchantServiceImpl implements MerchantService {
 				structure.setStatusCode(HttpStatus.FOUND.value());
 				return structure;
 			} else {
-				throw new UserDefinedException("Your account is Pending please contact admin to make it active");
+				throw new UserDefinedException("Your account activation process is Pending please contact admin");
 			}
 		}
 	}
