@@ -30,5 +30,5 @@ public class Item {
 	@ManyToMany
 	@JoinColumn
 	@JsonIgnore
-	private List<Order> orders;
+	private List<ShoppingOrder> shoppingOrders;
 }

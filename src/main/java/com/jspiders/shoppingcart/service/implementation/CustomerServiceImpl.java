@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.jspiders.shoppingcart.dao.implementation.CustomerDaoImpl;
+import com.jspiders.shoppingcart.dao.CustomerDao;
 import com.jspiders.shoppingcart.dto.Customer;
 import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.helper.CustomerMailVerification;
@@ -20,7 +20,7 @@ import net.bytebuddy.utility.RandomString;
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
-	CustomerDaoImpl customerDaoImpl;
+	CustomerDao customerDao;
 
 	@Autowired
 	CustomerMailVerification customerMailVerification;
@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setPassword(password);
 			customer.setToken(null);
 
-			Customer customer1 = customerDaoImpl.saveCustomer(customer);
+			Customer customer1 = customerDao.saveCustomer(customer);
 
 			ResponseStructure<Customer> structure = new ResponseStructure<Customer>();
 			if (customer1 != null) {
@@ -67,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseStructure<Customer> validateCustomer(String email, String password) {
-		Customer customer = customerDaoImpl.validateCustomer(email, password);
+		Customer customer = customerDao.validateCustomer(email, password);
 		if (customer == null) {
 			throw new UserDefinedException("Login Failed, check email and password and try again");
 		} else {
@@ -81,7 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseStructure<Customer> findCustomerById(int customerId) {
-		Optional<Customer> customer1 = customerDaoImpl.findCustomerById(customerId);
+		Optional<Customer> customer1 = customerDao.findCustomerById(customerId);
 		if (customer1.isEmpty()) {
 			throw new UserDefinedException("Couldnt find customer with the id " + customerId);
 		} else {
@@ -95,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseStructure<List<Customer>> fetchAllCustomers() {
-		List<Customer> list = customerDaoImpl.fetchAllCustomers();
+		List<Customer> list = customerDao.fetchAllCustomers();
 		if (list.isEmpty()) {
 			throw new UserDefinedException("No data found...");
 		} else {

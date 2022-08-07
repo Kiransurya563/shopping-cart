@@ -7,15 +7,16 @@ import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 public interface ProductService {
 
-	ResponseStructure<Product> saveProduct(Product product);
+	ResponseStructure<Product> saveProduct(Product product, int merchantId);
 
-	ResponseStructure<Product> updateProduct(Product product, int merchantId);
+	ResponseStructure<List<Product>> fetchAllMerchantProducts(int merchantId);
 
 	ResponseStructure<Product> fetchProductById(int productId);
 
-	Product findProductById(int productId);
+	ResponseStructure<List<Product>> updateProduct(Product product, int merchantId);
 
-	ResponseStructure<Product> deleteProduct(int productId);
+	ResponseStructure<List<Product>> deleteProduct(int productId);
 
-	ResponseStructure<List<Product>> getAllProducts(int merchantId);
+	ResponseStructure<List<Product>> fetchAllProducts();
+
 }

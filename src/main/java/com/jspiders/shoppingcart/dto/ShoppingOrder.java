@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Order {
+public class ShoppingOrder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -24,6 +24,6 @@ public class Order {
 	@JoinColumn
 	@JsonIgnore
 	private Customer customer;
-	@ManyToMany(mappedBy = "orders")
+	@ManyToMany(mappedBy = "cartOrders")
 	private List<Item> items;
 }

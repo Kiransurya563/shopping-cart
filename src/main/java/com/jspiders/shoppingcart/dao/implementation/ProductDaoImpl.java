@@ -15,20 +15,25 @@ public class ProductDaoImpl implements ProductDao {
 	@Autowired
 	ProductRepository productRepository;
 
+	@Override
+	public Product deleteProduct(Product product) {
+		productRepository.delete(product);
+		return product;
+	}
+
+	@Override
+	public List<Product> fetchAllProducts() {
+		return productRepository.findAll();
+	}
+
+	@Override
 	public Product saveProduct(Product product) {
 		return productRepository.save(product);
 	}
 
-	public Optional<Product> findProductByid(int id) {
-		return productRepository.findById(id);
-	}
-
-	public void deleteProductById(int id) {
-		productRepository.deleteById(id);
-	}
-
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
+	@Override
+	public Optional<Product> findProductByid(int productId) {
+		return productRepository.findById(productId);
 	}
 
 }

@@ -6,14 +6,12 @@ import java.util.Optional;
 import com.jspiders.shoppingcart.dto.Product;
 
 public interface ProductDao {
-	 Product saveProduct(Product product);
 
-	
+	Product saveProduct(Product product);
 
-	 Optional<Product> findProductByid(int id);
+	Optional<Product> findProductByid(int productId);
 
-	 void deleteProductById(int id);
+	Product deleteProduct(Product product);
 
-     List<Product> getAllProducts();
-
+	List<Product> fetchAllProducts();
 }
