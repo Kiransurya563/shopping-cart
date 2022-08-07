@@ -12,7 +12,7 @@ import com.jspiders.shoppingcart.helper.ResponseStructure;
 import com.jspiders.shoppingcart.service.implementation.AdminServiceImpl;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 public class AdminController {
 	@Autowired
 	AdminServiceImpl adminServiceImpl;
