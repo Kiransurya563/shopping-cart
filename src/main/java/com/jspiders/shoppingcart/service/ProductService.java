@@ -2,20 +2,20 @@ package com.jspiders.shoppingcart.service;
 
 import java.util.List;
 
-
 import com.jspiders.shoppingcart.dto.Product;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 public interface ProductService {
-	
 
-	public ResponseStructure<Product> saveProduct(Product product)  ;
+	ResponseStructure<Product> saveProduct(Product product);
 
-	public ResponseStructure<Product> updateProduct(Product product, int id) ;
-	public ResponseStructure<Product> fetchProductById(int id)  ;
+	ResponseStructure<Product> updateProduct(Product product, int merchantId);
 
-	public Product findProductById(int id)  ;
-	public ResponseStructure<Product> deleteProduct(int id)  ;
+	ResponseStructure<Product> fetchProductById(int productId);
 
-	public ResponseStructure<List<Product>> getAllProducts(int id)  ;
+	Product findProductById(int productId);
+
+	ResponseStructure<Product> deleteProduct(int productId);
+
+	ResponseStructure<List<Product>> getAllProducts(int merchantId);
 }

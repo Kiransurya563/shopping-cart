@@ -13,14 +13,10 @@ import com.jspiders.shoppingcart.repository.ProductRepository;
 @Repository
 public class ProductDaoImpl implements ProductDao {
 	@Autowired
-	ProductRepository productRepository ;
-	public Product saveProduct(Product product) {
-   	 return productRepository.save(product) ;
-    }
-   
+	ProductRepository productRepository;
 
-	public Product updateProduct(Product Product) {
-		return productRepository.save(Product);
+	public Product saveProduct(Product product) {
+		return productRepository.save(product);
 	}
 
 	public Optional<Product> findProductByid(int id) {
@@ -30,10 +26,9 @@ public class ProductDaoImpl implements ProductDao {
 	public void deleteProductById(int id) {
 		productRepository.deleteById(id);
 	}
-   
-	public List<Product> getAllProducts() {
-		return productRepository.findAll() ;
-	}
 
+	public List<Product> getAllProducts() {
+		return productRepository.findAll();
+	}
 
 }

@@ -15,12 +15,12 @@ import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 import com.jspiders.shoppingcart.service.ProductService;
 
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 	@Autowired
 	ProductDao productDao;
 
 	@Autowired
-	MerchantDao merchantDao ;
+	MerchantDao merchantDao;
 
 	public ResponseStructure<Product> saveProduct(Product product) {
 		if (product != null) {
@@ -34,26 +34,26 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
-	public ResponseStructure<Product> updateProduct(Product product, int id) {
+	public ResponseStructure<List<Product>> updateProduct(Product product, int merchantId) {
 		if (productDao.findProductByid(product.getId()).isEmpty()) {
-			throw new NoSuchIdException(602, "no one exist for given id to update");
+			throw new NoSuchIdException(602, "no product exist for given id to update");
 		} else {
-			Merchant merchant = merchantDao.findMerchantById(id).get();
-			product.setMerchant(merchant);
-			productDao.updateProduct(product);
-			ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
-			responseStructure.setStatusCode(HttpStatus.FOUND.value());
-			responseStructure.setMessage("found");
-			responseStructure.setData(product);
-			return responseStructure;
+			if (merchantDao.findMerchantById(merchantId).isPresent()) {
+				Merchant merchant = merchantDao.findMerchantById(merchantId).get();
+				List<Product> products = merchant.getProducts();
+				product.setMerchant(merchant);
+				productDao.saveProduct(product);
+				
+				return getAllProducts(merchantId) ;
+			}
 		}
 	}
 
-	public ResponseStructure<Product> fetchProductById(int id) {
-		if (productDao.findProductByid(id).isEmpty()) {
-			throw new NoSuchIdException(602, "no one exist for given id to fetch");
+	public ResponseStructure<Product> fetchProductById(int productId) {
+		if (productDao.findProductByid(productId).isEmpty()) {
+			throw new NoSuchIdException(602, "no product exist for given id to fetch");
 		} else {
-			Product Product = productDao.findProductByid(id).get();
+			Product Product = productDao.findProductByid(productId).get();
 			ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
 			responseStructure.setStatusCode(HttpStatus.FOUND.value());
 			responseStructure.setMessage("found");
@@ -62,20 +62,20 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
-	public Product findProductById(int id) {
-		if (productDao.findProductByid(id).isEmpty()) {
-			throw new NoSuchIdException(602, "no one exist for given id to fetch");
+	public Product findProductById(int productId) {
+		if (productDao.findProductByid(productId).isEmpty()) {
+			throw new NoSuchIdException(602, "no product exist for given id to fetch");
 		} else {
-			Product Product = productDao.findProductByid(id).get();
+			Product Product = productDao.findProductByid(productId).get();
 			return Product;
 		}
 	}
 
-	public ResponseStructure<Product> deleteProduct(int id) {
-		if (productDao.findProductByid(id).isEmpty()) {
-			throw new NoSuchIdException(602, "no one exist for given id to delete");
+	public ResponseStructure<Product> deleteProduct(int productId) {
+		if (productDao.findProductByid(productId).isEmpty()) {
+			throw new NoSuchIdException(602, "no product exist for given id to delete");
 		} else {
-			productDao.deleteProductById(id);
+			productDao.deleteProductById(productId);
 			ResponseStructure<Product> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatusCode(HttpStatus.ACCEPTED.value());
 			responseStructure.setMessage("successfully deleted");
@@ -83,28 +83,27 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
-	public ResponseStructure<List<Product>> getAllProducts(int id) {
-		Merchant merchant = merchantDao.findMerchantById(id).get() ;
-		if(merchant!=null) {
-		List<Product> products = merchant.getProducts();
-		if (products.size() > 0) {
-			ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
-			responseStructure.setData(products);
-			responseStructure.setStatusCode(HttpStatus.FOUND.value());
-			responseStructure.setMessage("merchant's products");
-			return responseStructure;
-		} else {
-			ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
+	public ResponseStructure<List<Product>> getAllProducts(int merchantId) {
+		Merchant merchant = merchantDao.findMerchantById(merchantId).get();
+		if (merchant != null) {
+			List<Product> products = merchant.getProducts();
+			if (products.size() > 0) {
+				ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
+				responseStructure.setData(products);
+				responseStructure.setStatusCode(HttpStatus.FOUND.value());
+				responseStructure.setMessage("merchant's products");
+				return responseStructure;
+			} else {
+				ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
 
-			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
-			responseStructure.setMessage("no product for this merchant");
-			return responseStructure;
+				responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+				responseStructure.setMessage("no product for this merchant");
+				return responseStructure;
+			}
+		} else {
+			throw new NoSuchIdException();
 		}
-		}
-		else {
-			throw new NoSuchIdException() ;
-		}
-			
+
 	}
 
 }
