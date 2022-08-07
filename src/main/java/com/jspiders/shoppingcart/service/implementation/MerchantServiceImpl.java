@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.jspiders.shoppingcart.dao.implementation.MerchantDaoImpl;
 import com.jspiders.shoppingcart.dto.Merchant;
@@ -15,6 +16,7 @@ import com.jspiders.shoppingcart.service.MerchantService;
 
 import net.bytebuddy.utility.RandomString;
 
+@Service
 public class MerchantServiceImpl implements MerchantService {
 
 	@Autowired
@@ -53,7 +55,8 @@ public class MerchantServiceImpl implements MerchantService {
 			if (merchant1 != null) {
 				structure.setData(merchant1);
 				structure.setStatusCode(HttpStatus.CREATED.value());
-				structure.setMessage("Account Registered succesfully, please wait for 24 hours to get account activated");
+				structure.setMessage(
+						"Account Registered succesfully, please wait for 24 hours to get account activated");
 				return structure;
 			} else {
 				throw new UserDefinedException("Account did not get Created");

@@ -9,7 +9,7 @@ public interface CustomerDao {
 
 	Customer saveCustomer(Customer customer);
 
-	Customer validateCustomer(String email, String Password);
+	Customer validateCustomer(String email, String password);
 
 	Optional<Customer> findCustomerById(int customerId);
 

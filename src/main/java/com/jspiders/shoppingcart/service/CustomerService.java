@@ -11,7 +11,7 @@ public interface CustomerService {
 
 	ResponseStructure<Customer> saveCustomer(String password, String token);
 
-	ResponseStructure<Customer> validateCustomer(String email, String Password);
+	ResponseStructure<Customer> validateCustomer(String email, String password);
 
 	ResponseStructure<Customer> findCustomerById(int customerId);
 
