@@ -25,7 +25,7 @@ public class Customer {
 	private String gender;
 	private String token;
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "customer")
-	private List<Order> orders;
+	private List<ShoppingOrder> shoppingOrders;
 	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Address> addresses;
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "customer")

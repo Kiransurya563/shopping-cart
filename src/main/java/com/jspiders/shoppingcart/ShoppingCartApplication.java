@@ -19,9 +19,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class ShoppingCartApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ShoppingCartApplication.class, args);
-	}
 	@SuppressWarnings("rawtypes")
 	List<VendorExtension> vendorExtensions = new ArrayList<VendorExtension>();
 	Contact contact = new Contact("Jspiders", "https://jspiders.com/", "enquiry@jspiders.com");
@@ -36,8 +33,12 @@ public class ShoppingCartApplication {
 
 	@Bean
 	public Docket myDocket() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.ty"))
-				.build().apiInfo(apiInfo);
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("com.jspiders.shoppingcart")).build().apiInfo(apiInfo);
 
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(ShoppingCartApplication.class, args);
 	}
 }

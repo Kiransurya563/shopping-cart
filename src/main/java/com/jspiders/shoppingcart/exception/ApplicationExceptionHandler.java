@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 @ControllerAdvice
-public class ApplicationExceptionHandler{
+public class ApplicationExceptionHandler {
 
 	@ExceptionHandler(value = UserDefinedException.class)
 	public ResponseEntity<ResponseStructure<String>> userDefinedExceptionHandler(UserDefinedException ie) {
@@ -19,4 +19,5 @@ public class ApplicationExceptionHandler{
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_ACCEPTABLE);
 
 	}
+
 }
