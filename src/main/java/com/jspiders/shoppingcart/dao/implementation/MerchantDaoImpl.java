@@ -22,7 +22,7 @@ public class MerchantDaoImpl implements MerchantDao {
 
 	@Override
 	public Merchant validateMerchant(String email, String Password) {
-		return validateMerchant(email, Password);
+		return merchantRepository.validateMerchant(email, Password);
 	}
 
 	@Override
@@ -34,5 +34,4 @@ public class MerchantDaoImpl implements MerchantDao {
 	public List<Merchant> fetchAllMerchants() {
 		return merchantRepository.findAll();
 	}
-
 }
