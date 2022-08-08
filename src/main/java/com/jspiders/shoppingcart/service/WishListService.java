@@ -5,6 +5,4 @@ import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 public interface WishListService {
 	ResponseStructure<Product> createWishList(int productId,int customerId );
-
-	
 }
