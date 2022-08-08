@@ -55,8 +55,7 @@ public class MerchantServiceImpl implements MerchantService {
 			if (merchant1 != null) {
 				structure.setData(merchant1);
 				structure.setStatusCode(HttpStatus.CREATED.value());
-				structure.setMessage(
-						"Account Registered succesfully, please wait for 24 hours to get account activated");
+				structure.setMessage("Account Registered succesfully, please wait for 24 hours to get account activated");
 				return structure;
 			} else {
 				throw new UserDefinedException("Account did not get Created");
@@ -121,8 +120,10 @@ public class MerchantServiceImpl implements MerchantService {
 		} else if (merchant2.getStatus().equals("active")) {
 			merchant2.setStatus("inactive");
 			merchantDao.saveMerchant(merchant2);
+		}else {
+			merchant2.setStatus("active");
+			merchantDao.saveMerchant(merchant2);
 		}
 		return fetchAllMerchant();
 	}
-
 }

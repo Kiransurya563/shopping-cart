@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -28,7 +29,7 @@ public class Item {
 	@JsonIgnore
 	private Cart cart;
 	@ManyToMany
-	@JoinColumn
+	@JoinTable(joinColumns = @JoinColumn,inverseJoinColumns = @JoinColumn)
 	@JsonIgnore
 	private List<ShoppingOrder> shoppingOrders;
 }

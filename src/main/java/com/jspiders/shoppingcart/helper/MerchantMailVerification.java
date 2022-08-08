@@ -39,7 +39,7 @@ public class MerchantMailVerification {
 		String senderName = "Shopping Cart";
 
 		try {
-			helper.setFrom("shoppingcart@information.com", senderName);
+			helper.setFrom("saishkulkarni7@gmail.com", senderName);
 		} catch (UnsupportedEncodingException | MessagingException e1) {
 			e1.printStackTrace();
 		}

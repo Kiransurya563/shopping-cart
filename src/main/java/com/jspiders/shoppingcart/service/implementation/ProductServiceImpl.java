@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ResponseStructure<List<Product>> fetchAllMerchantProducts(int merchantId) {
+	public ResponseStructure<List<Product>> fetchMerchantAllProducts(int merchantId) {
 		Optional<Merchant> merchant = merchantDao.findMerchantById(merchantId);
 		if (merchant.isEmpty()) {
 			throw new UserDefinedException("Invalid merchant Id");
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
 				product.setMerchant(merchant1);
 				productDao.saveProduct(product);
 			}
-			return fetchAllMerchantProducts(merchantId);
+			return fetchMerchantAllProducts(merchantId);
 
 		} else {
 			throw new UserDefinedException("Invalid merchant id");
@@ -103,11 +103,10 @@ public class ProductServiceImpl implements ProductService {
 		if (product.isEmpty()) {
 			throw new UserDefinedException("No product with the id " + productId);
 		} else {
-			productDao.deleteProduct(product.get());
 			int merchantId = product.get().getMerchant().getId();
-			return fetchAllMerchantProducts(merchantId);
+			productDao.deleteProduct(product.get());
+			return fetchMerchantAllProducts(merchantId);
 		}
-
 	}
 
 	@Override
@@ -120,5 +119,4 @@ public class ProductServiceImpl implements ProductService {
 		structure.setStatusCode(HttpStatus.FOUND.value());
 		return structure;
 	}
-
 }

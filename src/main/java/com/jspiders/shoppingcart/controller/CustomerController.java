@@ -47,5 +47,4 @@ public class CustomerController {
 	public ResponseStructure<List<Product>> fetchAllProducts() {
 		return productService.fetchAllProducts();
 	}
-
 }
