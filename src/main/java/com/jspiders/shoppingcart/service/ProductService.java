@@ -9,7 +9,7 @@ public interface ProductService {
 
 	ResponseStructure<Product> saveProduct(Product product, int merchantId);
 
-	ResponseStructure<List<Product>> fetchAllMerchantProducts(int merchantId);
+	ResponseStructure<List<Product>> fetchMerchantAllProducts(int merchantId);
 
 	ResponseStructure<Product> fetchProductById(int productId);
 

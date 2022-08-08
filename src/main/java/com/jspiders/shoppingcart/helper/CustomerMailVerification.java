@@ -45,7 +45,7 @@ public class CustomerMailVerification {
 			e1.printStackTrace();
 		}
 		try {
-			helper.setTo(customer.getName());
+			helper.setTo(customer.getEmail());
 		} catch (MessagingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

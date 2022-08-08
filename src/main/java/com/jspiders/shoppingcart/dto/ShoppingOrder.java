@@ -24,6 +24,6 @@ public class ShoppingOrder {
 	@JoinColumn
 	@JsonIgnore
 	private Customer customer;
-	@ManyToMany(mappedBy = "cartOrders")
+	@ManyToMany(mappedBy = "shoppingOrders")
 	private List<Item> items;
 }

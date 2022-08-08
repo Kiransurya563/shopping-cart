@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public ResponseStructure<Customer> saveCustomer(String password, String token) {
+	public ResponseStructure<Customer> saveCustomer(String token, String password) {
 		if (token.equals(customer.getToken())) {
 			customer.setPassword(password);
 			customer.setToken(null);
