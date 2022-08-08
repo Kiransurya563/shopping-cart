@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jspiders.shoppingcart.dto.Cart;
 import com.jspiders.shoppingcart.dto.Customer;
 import com.jspiders.shoppingcart.dto.Product;
+import com.jspiders.shoppingcart.dto.ShoppingOrder;
 import com.jspiders.shoppingcart.helper.Login;
 import com.jspiders.shoppingcart.helper.Password;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 import com.jspiders.shoppingcart.service.CartService;
 import com.jspiders.shoppingcart.service.CustomerService;
 import com.jspiders.shoppingcart.service.ProductService;
+import com.jspiders.shoppingcart.service.ShoppingOrderService;
 
 @RestController
 @RequestMapping("/customers")
@@ -33,6 +35,9 @@ public class CustomerController {
 
 	@Autowired
 	CartService cartService;
+
+	@Autowired
+	ShoppingOrderService shoppingOrderService;
 
 	@PostMapping("/save")
 	public ResponseStructure<Customer> saveCustomer(@RequestBody Customer customer) {
@@ -67,6 +72,26 @@ public class CustomerController {
 	@DeleteMapping("/carts/{customerId}/{productId}")
 	public ResponseStructure<List<Product>> removeFromCart(@PathVariable int customerId, @PathVariable int productId) {
 		return cartService.removeFromCart(customerId, productId);
+	}
+
+	@PostMapping("/orders/{customerId}")
+	public ResponseStructure<ShoppingOrder> placeOrder(@PathVariable int customerId) {
+		return shoppingOrderService.placeOrder(customerId);
+	}
+
+	@GetMapping("/orders/{orderId}")
+	public ResponseStructure<ShoppingOrder> getOrderById(@PathVariable int orderId) {
+		return shoppingOrderService.getOrderById(orderId);
+	}
+
+	@GetMapping("/orders/{customerId}")
+	public ResponseStructure<List<ShoppingOrder>> getCustomerAllOrders(@PathVariable int customerId) {
+		return shoppingOrderService.getCustomerAllOrders(customerId);
+	}
+
+	@DeleteMapping("/orders/{orderId}")
+	public ResponseStructure<ShoppingOrder> cancelOrder(@PathVariable int orderId) {
+		return shoppingOrderService.cancelOrder(orderId);
 	}
 
 }

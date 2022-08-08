@@ -36,4 +36,9 @@ public class ProductDaoImpl implements ProductDao {
 		return productRepository.findById(productId);
 	}
 
+	@Override
+	public Product findProductByName(String productName) {
+		return productRepository.findProductByName(productName);
+	}
+
 }

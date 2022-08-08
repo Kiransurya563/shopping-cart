@@ -46,7 +46,13 @@ public class CartServiceImpl implements CartService {
 			Customer customer = opCustomer.get();
 
 			Cart cart = customer.getCart();
+			if(cart==null)
+			{
+			cart=new Cart();
+			}
 			List<Item> list1 = cart.getItems();
+			
+			
 			if (opProduct.isEmpty()) {
 				throw new UserDefinedException("Product Not found");
 			} else {
@@ -59,6 +65,8 @@ public class CartServiceImpl implements CartService {
 					item.setName(product.getName());
 					item.setPrice(product.getPrice());
 					item.setQuantity(1);
+					item.setCart(cart);
+					
 					list1.add(item);
 				} else {
 					Item item2 = list.get(0);

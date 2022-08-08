@@ -6,4 +6,6 @@ import com.jspiders.shoppingcart.dto.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+	Product findProductByName(String productName);
+
 }

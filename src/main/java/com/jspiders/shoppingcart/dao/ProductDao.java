@@ -14,4 +14,6 @@ public interface ProductDao {
 	Product deleteProduct(Product product);
 
 	List<Product> fetchAllProducts();
+
+	Product findProductByName(String productName);
 }
