@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,4 +27,6 @@ public class ShoppingOrder {
 	private Customer customer;
 	@ManyToMany(mappedBy = "shoppingOrders")
 	private List<Item> items;
+	@OneToOne
+	private Address address;
 }

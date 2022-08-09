@@ -6,7 +6,7 @@ import com.jspiders.shoppingcart.dto.ShoppingOrder;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 
 public interface ShoppingOrderService {
-	ResponseStructure<ShoppingOrder> placeOrder(int customerId);
+	ResponseStructure<ShoppingOrder> placeOrder(int customerId, int addressId);
 
 	ResponseStructure<ShoppingOrder> getOrderById(int orderId);
 

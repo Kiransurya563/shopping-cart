@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import com.jspiders.shoppingcart.dao.AddressDao;
 import com.jspiders.shoppingcart.dao.CartDao;
 import com.jspiders.shoppingcart.dao.CustomerDao;
 import com.jspiders.shoppingcart.dao.ProductDao;
 import com.jspiders.shoppingcart.dao.ShoppingOrderDao;
+import com.jspiders.shoppingcart.dto.Address;
 import com.jspiders.shoppingcart.dto.Cart;
 import com.jspiders.shoppingcart.dto.Customer;
 import com.jspiders.shoppingcart.dto.Item;
@@ -33,9 +35,13 @@ public class ShoppingOrderServiceImpl implements ShoppingOrderService {
 	@Autowired
 	ProductDao productDao;
 
+	@Autowired
+	AddressDao addressDao;
+
 	@Override
-	public ResponseStructure<ShoppingOrder> placeOrder(int customerId) {
+	public ResponseStructure<ShoppingOrder> placeOrder(int customerId, int addressId) {
 		Optional<Customer> optional = customerDao.findCustomerById(customerId);
+		Optional<Address> optionalAddress = addressDao.fetchAddressById(addressId);
 
 		if (optional.isEmpty()) {
 			throw new UserDefinedException("No Customer Found");
@@ -46,6 +52,11 @@ public class ShoppingOrderServiceImpl implements ShoppingOrderService {
 			if (cart.getItems() != null) {
 				ShoppingOrder shoppingOrder = new ShoppingOrder();
 				shoppingOrder.setCustomer(customer);
+				if (optionalAddress.isEmpty()) {
+					throw new UserDefinedException("Address Id did not match any");
+				} else {
+					shoppingOrder.setAddress(optionalAddress.get());
+				}
 
 				List<Item> items = cart.getItems();
 				shoppingOrder.setItems(items);
