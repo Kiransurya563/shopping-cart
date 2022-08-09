@@ -122,6 +122,10 @@ public class MerchantServiceImpl implements MerchantService {
 			merchant2.setStatus("inactive");
 			merchantDao.saveMerchant(merchant2);
 		}
+		else {
+			merchant2.setStatus("active");
+			merchantDao.saveMerchant(merchant2);
+		}
 		return fetchAllMerchant();
 	}
 

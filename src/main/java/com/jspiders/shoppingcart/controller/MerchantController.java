@@ -54,7 +54,7 @@ public class MerchantController {
 		return productService.fetchMerchantAllProducts(merchantId);
 	}
 
-	@GetMapping("/products/{productId}")
+	@GetMapping("/product/{productId}")
 	public ResponseStructure<Product> fetchProductById(@PathVariable int productId) {
 		return productService.fetchProductById(productId);
 	}

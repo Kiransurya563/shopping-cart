@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.jspiders.shoppingcart.dao.AddressDao;
 import com.jspiders.shoppingcart.dao.CartDao;
@@ -22,6 +23,7 @@ import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 import com.jspiders.shoppingcart.service.ShoppingOrderService;
 
+@Service
 public class ShoppingOrderServiceImpl implements ShoppingOrderService {
 	@Autowired
 	CustomerDao customerDao;

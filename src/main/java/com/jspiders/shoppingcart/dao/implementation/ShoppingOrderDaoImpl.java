@@ -3,11 +3,13 @@ package com.jspiders.shoppingcart.dao.implementation;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.ShoppingOrderDao;
 import com.jspiders.shoppingcart.dto.ShoppingOrder;
 import com.jspiders.shoppingcart.repository.ShoppingOrderRepository;
 
+@Repository
 public class ShoppingOrderDaoImpl implements ShoppingOrderDao {
 
 	@Autowired

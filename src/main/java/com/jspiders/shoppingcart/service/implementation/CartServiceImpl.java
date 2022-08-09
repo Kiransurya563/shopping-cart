@@ -1,5 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	CartDao cartDao;
 
+
 	@Override
 	public ResponseStructure<List<Product>> addToCart(int customerId, int productId) {
 		Optional<Customer> opCustomer = customerDao.findCustomerById(customerId);
@@ -43,47 +45,59 @@ public class CartServiceImpl implements CartService {
 		if (opCustomer.isEmpty()) {
 			throw new UserDefinedException("Customer Id did not match any");
 		} else {
-			Customer customer = opCustomer.get();
-
-			Cart cart = customer.getCart();
-			if(cart==null)
-			{
-			cart=new Cart();
-			}
-			List<Item> list1 = cart.getItems();
-			
-			
 			if (opProduct.isEmpty()) {
 				throw new UserDefinedException("Product Not found");
 			} else {
+				Customer customer = opCustomer.get();
 				Product product = opProduct.get();
-				List<Item> list = cart.getItems().stream().filter(i -> i.getName().equals(product.getName()))
-						.collect(Collectors.toList());
 
-				if (list.isEmpty()) {
-					Item item = new Item();
-					item.setName(product.getName());
-					item.setPrice(product.getPrice());
-					item.setQuantity(1);
-					item.setCart(cart);
-					
-					list1.add(item);
+				Cart cart = customer.getCart();
+
+				if (cart == null) {
+					cart = new Cart();
 				} else {
-					Item item2 = list.get(0);
-					item2.setQuantity(item2.getQuantity() + 1);
-					list1.remove(0);
-					list1.add(item2);
+					if (cart.getItems() == null) {
+						cart.setItems(new ArrayList<>());
+					} else {
+						List<Item> list1 = cart.getItems();
+
+						if (list1.isEmpty()) {
+							Item item = new Item();
+							item.setName(product.getName());
+							item.setPrice(product.getPrice());
+							item.setQuantity(1);
+							item.setCart(cart);
+							list1.add(item);
+							
+						} else {
+							List<Item> list = cart.getItems().stream()
+									.filter(i -> i.getName().equals(product.getName())).collect(Collectors.toList());
+
+							if (list.isEmpty()) {
+								Item item = new Item();
+								item.setName(product.getName());
+								item.setPrice(product.getPrice());
+								item.setQuantity(1);
+								item.setCart(cart);
+
+								list1.add(item);
+							} else {
+								Item item2 = list.get(0);
+								item2.setQuantity(item2.getQuantity() + 1);
+								list1.remove(0);
+								list1.add(item2);
+							}
+						}
+						cart.setCustomer(customer);
+						cart.setItems(list1);
+						cartDao.saveCart(cart);
+						customer.setCart(cart);
+						customerDao.saveCustomer(customer);
+					}
 				}
-				cart.setCustomer(customer);
-				cart.setItems(list1);
-
-				customer.setCart(cart);
-
-				customerDao.saveCustomer(customer);
-				cartDao.saveCart(cart);
-
 			}
 		}
+
 		return productService.fetchAllProducts();
 	}
 
@@ -118,15 +132,14 @@ public class CartServiceImpl implements CartService {
 						list1.remove(item2);
 					}
 				}
-				cart.setCustomer(customer);
-				cart.setItems(list1);
-
-				customer.setCart(cart);
-
-				customerDao.saveCustomer(customer);
-				cartDao.saveCart(cart);
-
 			}
+			cart.setCustomer(customer);
+			cart.setItems(list1);
+
+			customer.setCart(cart);
+
+			customerDao.saveCustomer(customer);
+			cartDao.saveCart(cart);
 		}
 		return productService.fetchAllProducts();
 	}
