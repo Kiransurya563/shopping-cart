@@ -35,12 +35,13 @@ public class AddressServiceImpl implements AddressService {
 			Customer customer = opCustomer.get();
 			List<Address> list = customer.getAddresses();
 			list.add(address);
+			address = addressDao.addAddress(address);
 			customer.setAddresses(list);
 
 			customerDao.saveCustomer(customer);
 		}
 		ResponseStructure<Address> structure = new ResponseStructure<Address>();
-		structure.setData(addressDao.addAddress(address));
+		structure.setData(address);
 		structure.setStatusCode(HttpStatus.CREATED.value());
 		structure.setMessage("Address added Succesfully.");
 		return structure;

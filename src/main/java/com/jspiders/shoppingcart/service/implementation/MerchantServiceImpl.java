@@ -121,12 +121,10 @@ public class MerchantServiceImpl implements MerchantService {
 		} else if (merchant2.getStatus().equals("active")) {
 			merchant2.setStatus("inactive");
 			merchantDao.saveMerchant(merchant2);
-		}
-		else {
+		} else {
 			merchant2.setStatus("active");
 			merchantDao.saveMerchant(merchant2);
 		}
 		return fetchAllMerchant();
 	}
-
 }

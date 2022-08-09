@@ -42,53 +42,60 @@ public class ShoppingOrderServiceImpl implements ShoppingOrderService {
 
 	@Override
 	public ResponseStructure<ShoppingOrder> placeOrder(int customerId, int addressId) {
-		Optional<Customer> optional = customerDao.findCustomerById(customerId);
+
+		Optional<Customer> optionalCustomer = customerDao.findCustomerById(customerId);
 		Optional<Address> optionalAddress = addressDao.fetchAddressById(addressId);
 
-		if (optional.isEmpty()) {
+		if (optionalCustomer.isEmpty()) {
 			throw new UserDefinedException("No Customer Found");
 		} else {
-			Customer customer = optional.get();
-			Cart cart = customer.getCart();
-
-			if (cart.getItems() != null) {
-				ShoppingOrder shoppingOrder = new ShoppingOrder();
-				shoppingOrder.setCustomer(customer);
-				if (optionalAddress.isEmpty()) {
-					throw new UserDefinedException("Address Id did not match any");
+			if (optionalAddress.isEmpty()) {
+				throw new UserDefinedException("Address not found");
+			} else {
+				Customer customer = optionalCustomer.get();
+				Address address = optionalAddress.get();
+				Cart cart = customer.getCart();
+				if (cart == null) {
+					throw new UserDefinedException("Nothing is there in cart");
 				} else {
-					shoppingOrder.setAddress(optionalAddress.get());
-				}
+					List<Item> items = cart.getItems();
+					List<ShoppingOrder> list = customer.getShoppingOrders();
+					if (list == null) {
+						list = new ArrayList<>();
+					}
 
-				List<Item> items = cart.getItems();
-				shoppingOrder.setItems(items);
-
-				for (Item item : items) {
-					Product product = productDao.findProductByName(item.getName());
-					if (product.getStock() < item.getQuantity()) {
-						throw new UserDefinedException("Out of stock");
+					if (items.isEmpty()) {
+						throw new UserDefinedException("No products present in cart");
 					} else {
-						product.setStock(product.getStock() - item.getQuantity());
-						productDao.saveProduct(product);
+						ShoppingOrder shoppingOrder = new ShoppingOrder();
+						List<Item> shoppingList = new ArrayList<>();
+
+						for (Item item : items) {
+							Product product = productDao.findProductByName(item.getName());
+							if (product.getStock() < item.getQuantity()) {
+								throw new UserDefinedException("Out of Stock");
+							} else {
+								
+								product.setStock(product.getStock() - item.getQuantity());
+								productDao.saveProduct(product);
+								shoppingList.add(item);
+							}
+						}
+						shoppingOrder.setItems(shoppingList);
+						shoppingOrder.setAddress(address);
+						shoppingOrder.setCustomer(customer);
+
+						shoppingOrderDao.saveOrder(shoppingOrder);
+						customer.setCart(null);
+						customerDao.saveCustomer(customer);
+						ResponseStructure<ShoppingOrder> responseStructure = new ResponseStructure<ShoppingOrder>();
+						responseStructure.setStatusCode(HttpStatus.CREATED.value());
+						responseStructure.setMessage("Order Placed");
+						responseStructure.setData(shoppingOrder);
+						return responseStructure;
+
 					}
 				}
-
-				List<ShoppingOrder> shoppingOrders = customer.getShoppingOrders();
-				shoppingOrders.add(shoppingOrder);
-
-				customer.setShoppingOrders(shoppingOrders);
-				customerDao.saveCustomer(customer);
-
-				cart.setItems(new ArrayList<>());
-				cartDao.saveCart(cart);
-
-				ResponseStructure<ShoppingOrder> responseStructure = new ResponseStructure<ShoppingOrder>();
-				responseStructure.setStatusCode(HttpStatus.CREATED.value());
-				responseStructure.setMessage("Order Placed");
-				responseStructure.setData(shoppingOrderDao.saveOrder(shoppingOrder));
-				return responseStructure;
-			} else {
-				throw new UserDefinedException("No products present in cart");
 			}
 
 		}

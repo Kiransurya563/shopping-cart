@@ -41,32 +41,28 @@ public class CustomerMailVerification {
 		try {
 			helper.setFrom("saishkulkarni7@gmail.com", senderName);
 		} catch (UnsupportedEncodingException | MessagingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
 			helper.setTo(customer.getEmail());
 		} catch (MessagingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
 			helper.setSubject(subject);
 		} catch (MessagingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
 			helper.setText(mailcontent, true);
 		} catch (MessagingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		try {
 			mailSender.send(mimeMessage);
 		} catch (MailSendException e) {
-			throw new UserDefinedException("Check your internet Connection and email adress");
+			throw new UserDefinedException("Check your internet connection");
 		}
 
 	}
@@ -78,7 +74,6 @@ public class CustomerMailVerification {
 		try {
 			configuration.getTemplate("Customer-email-template.ftl").process(model, writer);
 		} catch (TemplateException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return writer.getBuffer().toString();

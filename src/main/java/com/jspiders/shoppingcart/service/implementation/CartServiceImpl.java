@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.jspiders.shoppingcart.dao.CartDao;
 import com.jspiders.shoppingcart.dao.CustomerDao;
+import com.jspiders.shoppingcart.dao.ItemDao;
 import com.jspiders.shoppingcart.dao.ProductDao;
 import com.jspiders.shoppingcart.dto.Cart;
 import com.jspiders.shoppingcart.dto.Customer;
@@ -36,6 +37,8 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	CartDao cartDao;
 
+	@Autowired
+	ItemDao itemDao;
 
 	@Override
 	public ResponseStructure<List<Product>> addToCart(int customerId, int productId) {
@@ -45,64 +48,64 @@ public class CartServiceImpl implements CartService {
 		if (opCustomer.isEmpty()) {
 			throw new UserDefinedException("Customer Id did not match any");
 		} else {
+			Customer customer = opCustomer.get();
+
+			Cart cart = customer.getCart();
+			if (cart == null) {
+				cart = new Cart();
+			}
+			List<Item> list1 = cart.getItems();
 			if (opProduct.isEmpty()) {
 				throw new UserDefinedException("Product Not found");
 			} else {
-				Customer customer = opCustomer.get();
-				Product product = opProduct.get();
-
-				Cart cart = customer.getCart();
-
-				if (cart == null) {
-					cart = new Cart();
+				if (list1 == null) {
+					list1 = new ArrayList<>();
 				} else {
-					if (cart.getItems() == null) {
-						cart.setItems(new ArrayList<>());
+					Product product = opProduct.get();
+					if (list1.isEmpty()) {
+						Item item = new Item();
+						item.setName(product.getName());
+						item.setPrice(product.getPrice());
+						item.setQuantity(1);
+						item.setCart(cart);
+						itemDao.saveItem(item);
+						list1.add(item);
 					} else {
-						List<Item> list1 = cart.getItems();
-
-						if (list1.isEmpty()) {
+						List<Item> list = list1.stream().filter(i -> i.getName().equals(product.getName()))
+								.collect(Collectors.toList());
+						if (list.isEmpty()) {
 							Item item = new Item();
 							item.setName(product.getName());
 							item.setPrice(product.getPrice());
 							item.setQuantity(1);
 							item.setCart(cart);
+							itemDao.saveItem(item);
 							list1.add(item);
-							
 						} else {
-							List<Item> list = cart.getItems().stream()
-									.filter(i -> i.getName().equals(product.getName())).collect(Collectors.toList());
-
-							if (list.isEmpty()) {
-								Item item = new Item();
-								item.setName(product.getName());
-								item.setPrice(product.getPrice());
-								item.setQuantity(1);
-								item.setCart(cart);
-
-								list1.add(item);
-							} else {
-								Item item2 = list.get(0);
-								item2.setQuantity(item2.getQuantity() + 1);
-								list1.remove(0);
-								list1.add(item2);
-							}
+							Item item2 = list.get(0);
+							item2.setQuantity(item2.getQuantity() + 1);
+							itemDao.saveItem(item2);
+							list1.remove(0);
+							list1.add(item2);
 						}
-						cart.setCustomer(customer);
-						cart.setItems(list1);
-						cartDao.saveCart(cart);
-						customer.setCart(cart);
-						customerDao.saveCustomer(customer);
 					}
 				}
-			}
-		}
 
+			}
+
+			cart.setCustomer(customer);
+			cart.setItems(list1);
+			cartDao.saveCart(cart);
+			customer.setCart(cart);
+			customerDao.saveCustomer(customer);
+
+		}
 		return productService.fetchAllProducts();
+
 	}
 
 	@Override
-	public ResponseStructure<List<Product>> removeFromCart(int customerId, int productId) {
+	public ResponseStructure<Cart> removeFromCart(int customerId, int productId) {
 		Optional<Customer> opCustomer = customerDao.findCustomerById(customerId);
 		Optional<Product> opProduct = productDao.findProductByid(productId);
 
@@ -117,7 +120,7 @@ public class CartServiceImpl implements CartService {
 				throw new UserDefinedException("Product Not found");
 			} else {
 				Product product = opProduct.get();
-				List<Item> list = cart.getItems().stream().filter(i -> i.getName().equals(product.getName()))
+				List<Item> list = list1.stream().filter(i -> i.getName().equals(product.getName()))
 						.collect(Collectors.toList());
 
 				if (list.isEmpty()) {
@@ -128,8 +131,10 @@ public class CartServiceImpl implements CartService {
 						item2.setQuantity(item2.getQuantity() - 1);
 						list1.remove(0);
 						list1.add(item2);
+						itemDao.saveItem(item2);
 					} else {
 						list1.remove(item2);
+						itemDao.deleteItem(item2);
 					}
 				}
 			}
@@ -141,7 +146,7 @@ public class CartServiceImpl implements CartService {
 			customerDao.saveCustomer(customer);
 			cartDao.saveCart(cart);
 		}
-		return productService.fetchAllProducts();
+		return viewCart(customerId);
 	}
 
 	@Override

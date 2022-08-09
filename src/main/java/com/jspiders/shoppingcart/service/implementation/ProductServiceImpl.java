@@ -103,11 +103,10 @@ public class ProductServiceImpl implements ProductService {
 		if (product.isEmpty()) {
 			throw new UserDefinedException("No product with the id " + productId);
 		} else {
-			productDao.deleteProduct(product.get());
 			int merchantId = product.get().getMerchant().getId();
+			productDao.deleteProduct(product.get());
 			return fetchMerchantAllProducts(merchantId);
 		}
-
 	}
 
 	@Override
@@ -120,5 +119,4 @@ public class ProductServiceImpl implements ProductService {
 		structure.setStatusCode(HttpStatus.FOUND.value());
 		return structure;
 	}
-
 }

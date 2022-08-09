@@ -40,6 +40,7 @@ public class CustomerController {
 
 	@Autowired
 	ShoppingOrderService shoppingOrderService;
+
 	@Autowired
 	AddressService addressService;
 
@@ -74,7 +75,7 @@ public class CustomerController {
 	}
 
 	@DeleteMapping("/carts/{customerId}/{productId}")
-	public ResponseStructure<List<Product>> removeFromCart(@PathVariable int customerId, @PathVariable int productId) {
+	public ResponseStructure<Cart> removeFromCart(@PathVariable int customerId, @PathVariable int productId) {
 		return cartService.removeFromCart(customerId, productId);
 	}
 
@@ -92,18 +93,18 @@ public class CustomerController {
 	public ResponseStructure<Address> fetchAddressById(@PathVariable int addressId) {
 		return addressService.fetchAddressById(addressId);
 	}
-	
+
 	@GetMapping("/addresses/{customerId}")
 	public ResponseStructure<List<Address>> fetchCustomerAllAddresses(@PathVariable int customerId) {
 		return addressService.fetchCustomerAllAddresses(customerId);
 	}
 
 	@PostMapping("/orders/{customerId}/{addressId}")
-	public ResponseStructure<ShoppingOrder> placeOrder(@PathVariable int customerId,@PathVariable int addressId) {
-		return shoppingOrderService.placeOrder(customerId,addressId);
+	public ResponseStructure<ShoppingOrder> placeOrder(@PathVariable int customerId, @PathVariable int addressId) {
+		return shoppingOrderService.placeOrder(customerId, addressId);
 	}
 
-	@GetMapping("/orders/{orderId}")
+	@GetMapping("/order/{orderId}")
 	public ResponseStructure<ShoppingOrder> getOrderById(@PathVariable int orderId) {
 		return shoppingOrderService.getOrderById(orderId);
 	}

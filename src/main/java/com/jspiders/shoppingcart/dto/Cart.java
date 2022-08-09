@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -20,5 +22,6 @@ public class Cart {
 	@OneToMany(mappedBy = "cart")
 	private List<Item> items;
 	@OneToOne
+	@JsonIgnore
 	private Customer customer;
 }

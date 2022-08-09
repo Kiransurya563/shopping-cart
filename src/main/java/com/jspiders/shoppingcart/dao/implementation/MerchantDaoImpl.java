@@ -34,5 +34,4 @@ public class MerchantDaoImpl implements MerchantDao {
 	public List<Merchant> fetchAllMerchants() {
 		return merchantRepository.findAll();
 	}
-
 }
