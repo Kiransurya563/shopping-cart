@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jspiders.shoppingcart.dto.Cart;
 import com.jspiders.shoppingcart.dto.Customer;
 import com.jspiders.shoppingcart.dto.Product;
+import com.jspiders.shoppingcart.dto.WishList;
 import com.jspiders.shoppingcart.helper.Login;
 import com.jspiders.shoppingcart.helper.Password;
 import com.jspiders.shoppingcart.helper.ResponseStructure;
 import com.jspiders.shoppingcart.service.CartService;
 import com.jspiders.shoppingcart.service.CustomerService;
 import com.jspiders.shoppingcart.service.ProductService;
+import com.jspiders.shoppingcart.service.WishListService;
 
 @RestController
 @RequestMapping("/customers")
@@ -33,6 +35,9 @@ public class CustomerController {
 
 	@Autowired
 	CartService cartService;
+
+	@Autowired
+	WishListService wishListService;
 
 	@PostMapping("/save")
 	public ResponseStructure<Customer> saveCustomer(@RequestBody Customer customer) {
@@ -68,4 +73,17 @@ public class CustomerController {
 	public ResponseStructure<Cart> removeFromCart(@PathVariable int customerId, @PathVariable int productId) {
 		return cartService.removeFromCart(customerId, productId);
 	}
+
+	@PostMapping("/wishlists/{customerId}")
+	public ResponseStructure<List<WishList>> createWishList(@PathVariable int customerId,
+			@RequestBody WishList wishList) {
+		return wishListService.createWishList(customerId, wishList);
+	}
+
+	@PutMapping("/wishlists/{customerId}/{wishListId}/{productId}")
+	public ResponseStructure<List<Product>> saveProductToWishList(@PathVariable int customerId,
+			@PathVariable int wishListId, @PathVariable int productId) {
+		return wishListService.saveProductToWishList(customerId, wishListId, productId);
+	}
+		
 }
