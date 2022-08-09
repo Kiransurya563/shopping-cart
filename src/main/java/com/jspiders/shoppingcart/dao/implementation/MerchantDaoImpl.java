@@ -34,4 +34,10 @@ public class MerchantDaoImpl implements MerchantDao {
 	public List<Merchant> fetchAllMerchants() {
 		return merchantRepository.findAll();
 	}
+
+	@Override
+	public Merchant deleteMerchant(Merchant merchant) {
+		merchantRepository.delete(merchant);
+		return merchant;
+	}
 }

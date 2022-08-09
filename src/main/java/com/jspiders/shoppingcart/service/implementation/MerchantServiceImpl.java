@@ -127,4 +127,16 @@ public class MerchantServiceImpl implements MerchantService {
 		}
 		return fetchAllMerchant();
 	}
+
+	@Override
+	public ResponseStructure<Merchant> deleteMerchant(int merchantId) {
+		ResponseStructure<Merchant> merchant1 = findMerchantById(merchantId);
+		Merchant merchant2 = merchant1.getData();
+
+		ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
+		structure.setData(merchantDao.deleteMerchant(merchant2));
+		structure.setMessage("Merchant deleted");
+		structure.setStatusCode(HttpStatus.FOUND.value());
+		return structure;
+	}
 }

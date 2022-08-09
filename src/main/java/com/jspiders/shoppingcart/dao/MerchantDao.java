@@ -15,4 +15,6 @@ public interface MerchantDao {
 
 	List<Merchant> fetchAllMerchants();
 
+	Merchant deleteMerchant(Merchant merchant);
+
 }
