@@ -18,4 +18,6 @@ public interface MerchantService {
 	ResponseStructure<List<Merchant>> fetchAllMerchant();
 
 	ResponseStructure<List<Merchant>> changeMerchantStatus(int merchantId);
+
+	ResponseStructure<Merchant> deleteMerchant(int merchantId);
 }

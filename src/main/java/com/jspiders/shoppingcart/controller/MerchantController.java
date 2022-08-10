@@ -68,4 +68,9 @@ public class MerchantController {
 	public ResponseStructure<List<Product>> deleteProduct(@PathVariable int productId) {
 		return productService.deleteProduct(productId);
 	}
+	
+	@DeleteMapping("/delete/{merchantId}")
+	public ResponseStructure<Merchant> deleteMerchant(@PathVariable int merchantId) {
+		return merchantService.deleteMerchant(merchantId);
+	}
 }

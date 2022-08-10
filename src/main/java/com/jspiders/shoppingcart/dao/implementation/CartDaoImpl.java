@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.CartDao;
 import com.jspiders.shoppingcart.dto.Cart;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.CartRepository;
 
 @Repository
@@ -21,8 +22,13 @@ public class CartDaoImpl implements CartDao {
 	}
 
 	@Override
-	public Optional<Cart> fetchCart(int cartId) {
-		return cartRepository.findById(cartId);
+	public Cart fetchCart(int cartId) {
+		Optional<Cart> optional = cartRepository.findById(cartId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find cart, check cart id");
+		}
 	}
 
 }

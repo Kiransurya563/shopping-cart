@@ -1,7 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +54,8 @@ public class MerchantServiceImpl implements MerchantService {
 			if (merchant1 != null) {
 				structure.setData(merchant1);
 				structure.setStatusCode(HttpStatus.CREATED.value());
-				structure.setMessage("Account Registered succesfully, please wait for 24 hours to get account activated");
+				structure.setMessage(
+						"Account Registered succesfully, please wait for 24 hours to get account activated");
 				return structure;
 			} else {
 				throw new UserDefinedException("Account did not get Created");
@@ -84,16 +84,12 @@ public class MerchantServiceImpl implements MerchantService {
 
 	@Override
 	public ResponseStructure<Merchant> findMerchantById(int merchantId) {
-		Optional<Merchant> merchant1 = merchantDao.findMerchantById(merchantId);
-		if (merchant1.isEmpty()) {
-			throw new UserDefinedException("Couldnt find Merchant with the id " + merchantId);
-		} else {
-			ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
-			structure.setData(merchant1.get());
-			structure.setMessage("Data found...");
-			structure.setStatusCode(HttpStatus.FOUND.value());
-			return structure;
-		}
+		Merchant merchant = merchantDao.findMerchantById(merchantId);
+		ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
+		structure.setData(merchant);
+		structure.setMessage("Data found...");
+		structure.setStatusCode(HttpStatus.FOUND.value());
+		return structure;
 	}
 
 	@Override
@@ -120,10 +116,22 @@ public class MerchantServiceImpl implements MerchantService {
 		} else if (merchant2.getStatus().equals("active")) {
 			merchant2.setStatus("inactive");
 			merchantDao.saveMerchant(merchant2);
-		}else {
+		} else {
 			merchant2.setStatus("active");
 			merchantDao.saveMerchant(merchant2);
 		}
 		return fetchAllMerchant();
+	}
+
+	@Override
+	public ResponseStructure<Merchant> deleteMerchant(int merchantId) {
+		ResponseStructure<Merchant> merchant1 = findMerchantById(merchantId);
+		Merchant merchant2 = merchant1.getData();
+
+		ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
+		structure.setData(merchantDao.deleteMerchant(merchant2));
+		structure.setMessage("Merchant deleted");
+		structure.setStatusCode(HttpStatus.FOUND.value());
+		return structure;
 	}
 }

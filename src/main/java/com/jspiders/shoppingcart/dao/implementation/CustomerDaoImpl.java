@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.CustomerDao;
 import com.jspiders.shoppingcart.dto.Customer;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.CustomerRepository;
 
 @Repository
@@ -27,8 +28,13 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	@Override
-	public Optional<Customer> findCustomerById(int customerId) {
-		return customerRepository.findById(customerId);
+	public Customer findCustomerById(int customerId) {
+		Optional<Customer> optional = customerRepository.findById(customerId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find customer, check customer id");
+		}
 	}
 
 	@Override
