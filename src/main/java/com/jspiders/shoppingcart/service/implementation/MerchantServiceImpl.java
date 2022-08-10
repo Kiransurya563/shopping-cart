@@ -1,7 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,16 +84,12 @@ public class MerchantServiceImpl implements MerchantService {
 
 	@Override
 	public ResponseStructure<Merchant> findMerchantById(int merchantId) {
-		Optional<Merchant> merchant1 = merchantDao.findMerchantById(merchantId);
-		if (merchant1.isEmpty()) {
-			throw new UserDefinedException("Couldnt find Merchant with the id " + merchantId);
-		} else {
-			ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
-			structure.setData(merchant1.get());
-			structure.setMessage("Data found...");
-			structure.setStatusCode(HttpStatus.FOUND.value());
-			return structure;
-		}
+		Merchant merchant = merchantDao.findMerchantById(merchantId);
+		ResponseStructure<Merchant> structure = new ResponseStructure<Merchant>();
+		structure.setData(merchant);
+		structure.setMessage("Data found...");
+		structure.setStatusCode(HttpStatus.FOUND.value());
+		return structure;
 	}
 
 	@Override

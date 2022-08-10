@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.MerchantDao;
 import com.jspiders.shoppingcart.dto.Merchant;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.MerchantRepository;
 
 @Repository
@@ -26,8 +27,13 @@ public class MerchantDaoImpl implements MerchantDao {
 	}
 
 	@Override
-	public Optional<Merchant> findMerchantById(int merchantId) {
-		return merchantRepository.findById(merchantId);
+	public Merchant findMerchantById(int merchantId) {
+		Optional<Merchant> optional = merchantRepository.findById(merchantId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find merchant, check merchant id");
+		}
 	}
 
 	@Override

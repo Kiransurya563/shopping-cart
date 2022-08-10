@@ -1,7 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,16 +80,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseStructure<Customer> findCustomerById(int customerId) {
-		Optional<Customer> customer1 = customerDao.findCustomerById(customerId);
-		if (customer1.isEmpty()) {
-			throw new UserDefinedException("Couldnt find customer with the id " + customerId);
-		} else {
-			ResponseStructure<Customer> structure = new ResponseStructure<Customer>();
-			structure.setData(customer1.get());
-			structure.setMessage("Data found...");
-			structure.setStatusCode(HttpStatus.FOUND.value());
-			return structure;
-		}
+		Customer customer = customerDao.findCustomerById(customerId);
+		ResponseStructure<Customer> structure = new ResponseStructure<Customer>();
+		structure.setData(customer);
+		structure.setMessage("Data found...");
+		structure.setStatusCode(HttpStatus.FOUND.value());
+		return structure;
 	}
 
 	@Override

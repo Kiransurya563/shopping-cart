@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.ProductDao;
 import com.jspiders.shoppingcart.dto.Product;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.ProductRepository;
 
 @Repository
@@ -32,8 +33,13 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public Optional<Product> findProductByid(int productId) {
-		return productRepository.findById(productId);
+	public Product findProductByid(int productId) {
+		Optional<Product> optional = productRepository.findById(productId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find product, check product id");
+		}
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,87 +25,67 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ResponseStructure<Product> saveProduct(Product product, int merchantId) {
-		Optional<Merchant> merchant = merchantDao.findMerchantById(merchantId);
-		if (merchant.isPresent()) {
-			Merchant merchant1 = merchant.get();
-			product.setMerchant(merchant1);
-			List<Product> list = merchant1.getProducts();
-			list.add(product);
-			merchant1.setProducts(list);
-			merchantDao.saveMerchant(merchant1);
+		Merchant merchant = merchantDao.findMerchantById(merchantId);
 
-			ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
-			responseStructure.setStatusCode(HttpStatus.CREATED.value());
-			responseStructure.setMessage("Product Added");
-			responseStructure.setData(productDao.saveProduct(product));
-			return responseStructure;
+		product.setMerchant(merchant);
+		List<Product> list = merchant.getProducts();
+		list.add(product);
+		merchant.setProducts(list);
+		merchantDao.saveMerchant(merchant);
 
-		} else {
-			throw new UserDefinedException("Invalid merchant id");
-		}
+		ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
+		responseStructure.setStatusCode(HttpStatus.CREATED.value());
+		responseStructure.setMessage("Product Added");
+		responseStructure.setData(productDao.saveProduct(product));
+		return responseStructure;
+
 	}
 
 	@Override
 	public ResponseStructure<List<Product>> fetchMerchantAllProducts(int merchantId) {
-		Optional<Merchant> merchant = merchantDao.findMerchantById(merchantId);
-		if (merchant.isEmpty()) {
-			throw new UserDefinedException("Invalid merchant Id");
+		Merchant merchant = merchantDao.findMerchantById(merchantId);
+		List<Product> products = merchant.getProducts();
+		if (products.size() > 0) {
+			ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
+			responseStructure.setData(products);
+			responseStructure.setStatusCode(HttpStatus.FOUND.value());
+			responseStructure.setMessage("merchant's products");
+			return responseStructure;
 		} else {
-			Merchant merchant1 = merchant.get();
-			List<Product> products = merchant1.getProducts();
-			if (products.size() > 0) {
-				ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
-				responseStructure.setData(products);
-				responseStructure.setStatusCode(HttpStatus.FOUND.value());
-				responseStructure.setMessage("merchant's products");
-				return responseStructure;
-			} else {
-				throw new UserDefinedException("No products found ");
-			}
+			throw new UserDefinedException("No products found ");
 		}
 	}
 
 	@Override
 	public ResponseStructure<Product> fetchProductById(int productId) {
-		Optional<Product> product = productDao.findProductByid(productId);
-		if (product.isEmpty()) {
-			throw new UserDefinedException("No product with the id " + productId);
-		} else {
-			ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
-			responseStructure.setStatusCode(HttpStatus.FOUND.value());
-			responseStructure.setMessage("Product Found");
-			responseStructure.setData(product.get());
-			return responseStructure;
-		}
+		Product product = productDao.findProductByid(productId);
+
+		ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
+		responseStructure.setStatusCode(HttpStatus.FOUND.value());
+		responseStructure.setMessage("Product Found");
+		responseStructure.setData(product);
+		return responseStructure;
 	}
 
 	public ResponseStructure<List<Product>> updateProduct(Product product, int merchantId) {
-		Optional<Merchant> merchant = merchantDao.findMerchantById(merchantId);
-		if (merchant.isPresent()) {
-			Merchant merchant1 = merchant.get();
-			if (product.getId() == 0) {
-				throw new UserDefinedException("Invalid product id");
-			} else {
-				product.setMerchant(merchant1);
-				productDao.saveProduct(product);
-			}
-			return fetchMerchantAllProducts(merchantId);
+		Merchant merchant = merchantDao.findMerchantById(merchantId);
 
+		if (product.getId() == 0) {
+			throw new UserDefinedException("Invalid product id");
 		} else {
-			throw new UserDefinedException("Invalid merchant id");
+			product.setMerchant(merchant);
+			productDao.saveProduct(product);
 		}
+		return fetchMerchantAllProducts(merchantId);
 
 	}
 
 	public ResponseStructure<List<Product>> deleteProduct(int productId) {
-		Optional<Product> product = productDao.findProductByid(productId);
-		if (product.isEmpty()) {
-			throw new UserDefinedException("No product with the id " + productId);
-		} else {
-			int merchantId = product.get().getMerchant().getId();
-			productDao.deleteProduct(product.get());
-			return fetchMerchantAllProducts(merchantId);
-		}
+		Product product = productDao.findProductByid(productId);
+
+		int merchantId = product.getMerchant().getId();
+		productDao.deleteProduct(product);
+		return fetchMerchantAllProducts(merchantId);
 	}
 
 	@Override

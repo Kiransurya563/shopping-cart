@@ -1,7 +1,6 @@
 package com.jspiders.shoppingcart.dao;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.jspiders.shoppingcart.dto.Address;
 
@@ -12,5 +11,5 @@ public interface AddressDao {
 
 	List<Address> fetchCustomerAllAddresses();
 
-	Optional<Address> fetchAddressById(int addressId);
+	Address fetchAddressById(int addressId);
 }

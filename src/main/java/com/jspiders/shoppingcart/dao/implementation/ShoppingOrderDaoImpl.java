@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.ShoppingOrderDao;
 import com.jspiders.shoppingcart.dto.ShoppingOrder;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.ShoppingOrderRepository;
 
 @Repository
@@ -21,8 +22,13 @@ public class ShoppingOrderDaoImpl implements ShoppingOrderDao {
 	}
 
 	@Override
-	public Optional<ShoppingOrder> getOrderById(int orderId) {
-		return shoppingOrderrepository.findById(orderId);
+	public ShoppingOrder getOrderById(int orderId) {
+		Optional<ShoppingOrder> optional = shoppingOrderrepository.findById(orderId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find order, check order id");
+		}
 	}
 
 	@Override

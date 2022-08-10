@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.AddressDao;
 import com.jspiders.shoppingcart.dto.Address;
+import com.jspiders.shoppingcart.exception.UserDefinedException;
 import com.jspiders.shoppingcart.repository.AddressRepository;
 
 @Repository
@@ -33,8 +34,13 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	public Optional<Address> fetchAddressById(int addressId) {
-		return addressRepository.findById(addressId);
+	public Address fetchAddressById(int addressId) {
+		Optional<Address> optional = addressRepository.findById(addressId);
+		try {
+			return optional.get();
+		} catch (Exception e) {
+			throw new UserDefinedException("Could not find address, check address id");
+		}
 	}
 
 }
