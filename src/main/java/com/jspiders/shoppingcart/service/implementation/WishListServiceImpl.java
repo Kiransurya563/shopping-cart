@@ -1,5 +1,6 @@
 package com.jspiders.shoppingcart.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,14 +32,18 @@ public class WishListServiceImpl implements WishListService {
 
 	@Override
 	public ResponseStructure<List<WishList>> createWishList(int customerId, WishList wishList) {
-		Optional<Customer> customer = customerDao.findCustomerById(customerId);
-		Customer customer2 = customer.get();
+		Customer customer = customerDao.findCustomerById(customerId);
+		List<WishList> wishLists = customer.getWishLists();
+		for (WishList wishList2 : wishLists) {
+			if (wishList2.getName().equals(wishList.getName())) {
+				throw new UserDefinedException("wishlist name already exists with " + wishList.getName());
+			}
+		}
 		WishList list = wishListDao.createWishList(wishList);
-		list.setCustomer(customer2);
-		List<WishList> wishLists = customer2.getWishLists();
+		list.setCustomer(customer);
 		wishLists.add(list);
-		customer2.setWishLists(wishLists);
-		customerDao.saveCustomer(customer2);
+		customer.setWishLists(wishLists);
+		customerDao.saveCustomer(customer);
 		ResponseStructure<List<WishList>> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage("wishlist created");
@@ -47,33 +52,71 @@ public class WishListServiceImpl implements WishListService {
 	}
 
 	@Override
-	public ResponseStructure<List<Product>> saveProductToWishList(int customerId, int wishListId, int productId) {
-		Optional<Customer> customer = customerDao.findCustomerById(customerId);
-		Customer customer2 = customer.get();
-		Optional<WishList> wishList = wishListDao.findWishListById(wishListId);
-		WishList wishList2 = wishList.get();
-		Optional<Product> product = productDao.findProductByid(productId);
-		Product product2 = product.get();
+	public ResponseStructure<List<Product>> saveProductToWishList(int wishListId, int productId) {
+		WishList wishList = wishListDao.findWishListById(wishListId);
+		Product product = productDao.findProductByid(productId);
 
-		List<Product> products = wishList2.getProducts();
-		for (Product product3 : products) {
-			if (product3.getId() == product2.getId()) {
-				throw new UserDefinedException("product already exists in wishList");
-			} else {
-				products.add(product2);
-				wishList2.setProducts(products);
+		List<Product> products = wishList.getProducts();
+		if (products.isEmpty()) {
+			products.add(product);
+			wishList.setProducts(products);
+			wishListDao.updateWishList(wishList);
+			return fetchProductsByWishListID(wishList.getId());
+		} else {
+			for (Product p : products) {
+				if (p.getId() == productId) {
+					throw new UserDefinedException("product already exists in wishList " + p.getName());
+				}
+			}
+			products.add(product);
+			wishList.setProducts(products);
+			wishListDao.updateWishList(wishList);
+		}
+		return fetchProductsByWishListID(wishList.getId());
+	}
 
-				List<WishList> wishLists = customer2.getWishLists();
-				wishLists.add(wishList2);
-				wishListDao.createWishList(wishList2);
-				
-				customer2.setWishLists(wishLists);
+	@Override
+	public ResponseStructure<List<Product>> fetchProductsByWishListID(int wishListId) {
+		WishList wishList = wishListDao.fetchProductsByWishListID(wishListId);
+		ResponseStructure<List<Product>> responseStructure = new ResponseStructure<>();
+		responseStructure.setMessage("Products of " + wishList.getName());
+		responseStructure.setStatusCode(HttpStatus.FOUND.value());
+		responseStructure.setData(wishList.getProducts());
+		return responseStructure;
+	}
 
-				customerDao.saveCustomer(customer2);
-				wishListDao.createWishList(wishList2);
+	@Override
+	public ResponseStructure<List<WishList>> fetchWishLists(int customerId) {
+		Customer customer = customerDao.findCustomerById(customerId);
+		List<WishList> lists = customer.getWishLists();
+		if (lists.isEmpty()) {
+			throw new UserDefinedException("no wishlists found");
+		} else {
+			ResponseStructure<List<WishList>> responseStructure = new ResponseStructure<>();
+			responseStructure.setMessage("WishLists");
+			responseStructure.setStatusCode(HttpStatus.FOUND.value());
+			responseStructure.setData(lists);
+			return responseStructure;
+		}
+	}
 
-				return productService.fetchAllProducts();
+	@Override
+	public ResponseStructure<List<Product>> removeProductInWishListById(int wishListId, int productId) {
+		WishList wishList = wishListDao.findWishListById(wishListId);
+		List<Product> products = wishList.getProducts();
+		Product product = null;
+		for (Product p : products) {
+			if (p.getId() == productId) {
+				product = p;
 			}
 		}
+		if (product != null) {
+			products.remove(product);
+		}else {
+			throw new UserDefinedException("no product found");
+		}
+		wishList.setProducts(products);
+		wishListDao.updateWishList(wishList);
+		return fetchProductsByWishListID(wishListId);
 	}
 }

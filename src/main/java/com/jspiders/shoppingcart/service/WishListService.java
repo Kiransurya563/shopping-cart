@@ -9,5 +9,11 @@ import com.jspiders.shoppingcart.helper.ResponseStructure;
 public interface WishListService {
 	ResponseStructure<List<WishList>> createWishList(int customerId, WishList wishList);
 
-	ResponseStructure<List<Product>> saveProductToWishList(int customerId, int wishListId, int productId);
+	ResponseStructure<List<Product>> saveProductToWishList(int wishListId, int productId);
+
+	ResponseStructure<List<Product>> fetchProductsByWishListID(int wishListId);
+
+	ResponseStructure<List<WishList>> fetchWishLists(int customerId);
+
+	ResponseStructure<List<Product>> removeProductInWishListById(int wishListId, int productId);
 }

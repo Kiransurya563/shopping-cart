@@ -68,14 +68,14 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ResponseStructure<Product> fetchProductById(int productId) {
-		Optional<Product> product = productDao.findProductByid(productId);
-		if (product.isEmpty()) {
+		Product product = productDao.findProductByid(productId);
+		if (product != null) {
 			throw new UserDefinedException("No product with the id " + productId);
 		} else {
 			ResponseStructure<Product> responseStructure = new ResponseStructure<Product>();
 			responseStructure.setStatusCode(HttpStatus.FOUND.value());
 			responseStructure.setMessage("Product Found");
-			responseStructure.setData(product.get());
+			responseStructure.setData(product);
 			return responseStructure;
 		}
 	}
@@ -99,12 +99,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public ResponseStructure<List<Product>> deleteProduct(int productId) {
-		Optional<Product> product = productDao.findProductByid(productId);
-		if (product.isEmpty()) {
+		Product product = productDao.findProductByid(productId);
+		if (product != null) {
 			throw new UserDefinedException("No product with the id " + productId);
 		} else {
-			int merchantId = product.get().getMerchant().getId();
-			productDao.deleteProduct(product.get());
+			int merchantId = product.getMerchant().getId();
+			productDao.deleteProduct(product);
 			return fetchMerchantAllProducts(merchantId);
 		}
 	}

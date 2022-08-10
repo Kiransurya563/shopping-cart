@@ -81,12 +81,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseStructure<Customer> findCustomerById(int customerId) {
-		Optional<Customer> customer1 = customerDao.findCustomerById(customerId);
-		if (customer1.isEmpty()) {
+		Customer customer = customerDao.findCustomerById(customerId);
+		if (customer!=null) {
 			throw new UserDefinedException("Couldnt find customer with the id " + customerId);
 		} else {
 			ResponseStructure<Customer> structure = new ResponseStructure<Customer>();
-			structure.setData(customer1.get());
+			structure.setData(customer);
 			structure.setMessage("Data found...");
 			structure.setStatusCode(HttpStatus.FOUND.value());
 			return structure;

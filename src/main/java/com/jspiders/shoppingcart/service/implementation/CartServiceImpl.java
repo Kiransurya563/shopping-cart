@@ -41,23 +41,21 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public ResponseStructure<List<Product>> addToCart(int customerId, int productId) {
-		Optional<Customer> opCustomer = customerDao.findCustomerById(customerId);
-		Optional<Product> opProduct = productDao.findProductByid(productId);
+		Customer customer = customerDao.findCustomerById(customerId);
+		Product product = productDao.findProductByid(productId);
 
-		if (opCustomer.isEmpty()) {
+		if (customer != null) {
 			throw new UserDefinedException("Customer Id did not match any");
 		} else {
-			Customer customer = opCustomer.get();
-
 			Cart cart = customer.getCart();
 			if (cart == null) {
 				cart = new Cart();
 			}
 			List<Item> list1 = cart.getItems();
-			if (opProduct.isEmpty()) {
+			if (product != null) {
 				throw new UserDefinedException("Product Not found");
 			} else {
-				Product product = opProduct.get();
+
 				if (list1.isEmpty()) {
 					Item item = new Item();
 					item.setName(product.getName());
@@ -101,20 +99,17 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public ResponseStructure<Cart> removeFromCart(int customerId, int productId) {
-		Optional<Customer> opCustomer = customerDao.findCustomerById(customerId);
-		Optional<Product> opProduct = productDao.findProductByid(productId);
+		Customer customer = customerDao.findCustomerById(customerId);
+		Product product = productDao.findProductByid(productId);
 
-		if (opCustomer.isEmpty()) {
+		if (customer != null) {
 			throw new UserDefinedException("Customer Id did not match any");
 		} else {
-			Customer customer = opCustomer.get();
-
 			Cart cart = customer.getCart();
 			List<Item> list1 = cart.getItems();
-			if (opProduct.isEmpty()) {
+			if (product != null) {
 				throw new UserDefinedException("Product Not found");
 			} else {
-				Product product = opProduct.get();
 				List<Item> list = list1.stream().filter(i -> i.getName().equals(product.getName()))
 						.collect(Collectors.toList());
 
@@ -147,13 +142,11 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public ResponseStructure<Cart> viewCart(int customerId) {
-		Optional<Customer> opCustomer = customerDao.findCustomerById(customerId);
-		if (opCustomer.isEmpty()) {
+		Customer customer = customerDao.findCustomerById(customerId);
+		if (customer != null) {
 			throw new UserDefinedException("Customer Id did not match any");
 		} else {
-			Customer customer = opCustomer.get();
 			Cart cart = customer.getCart();
-
 			ResponseStructure<Cart> structure = new ResponseStructure<Cart>();
 			structure.setData(cart);
 			structure.setStatusCode(HttpStatus.FOUND.value());

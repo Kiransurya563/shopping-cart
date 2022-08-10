@@ -32,8 +32,9 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public Optional<Product> findProductByid(int productId) {
-		return productRepository.findById(productId);
+	public Product findProductByid(int productId) {
+		Optional<Product> prodOptional = productRepository.findById(productId);
+		return prodOptional.get();
 	}
 
 }

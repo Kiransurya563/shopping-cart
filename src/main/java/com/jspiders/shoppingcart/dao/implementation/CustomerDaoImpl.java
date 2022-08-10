@@ -27,8 +27,9 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	@Override
-	public Optional<Customer> findCustomerById(int customerId) {
-		return customerRepository.findById(customerId);
+	public Customer findCustomerById(int customerId) {
+		Optional<Customer> custOptional=customerRepository.findById(customerId);
+		return custOptional.get();
 	}
 
 	@Override

@@ -80,10 +80,25 @@ public class CustomerController {
 		return wishListService.createWishList(customerId, wishList);
 	}
 
-	@PutMapping("/wishlists/{customerId}/{wishListId}/{productId}")
-	public ResponseStructure<List<Product>> saveProductToWishList(@PathVariable int customerId,
-			@PathVariable int wishListId, @PathVariable int productId) {
-		return wishListService.saveProductToWishList(customerId, wishListId, productId);
+	@PutMapping("/wishlists/{wishListId}/{productId}")
+	public ResponseStructure<List<Product>> saveProductToWishList(@PathVariable int wishListId,
+			@PathVariable int productId) {
+		return wishListService.saveProductToWishList(wishListId, productId);
 	}
-		
+
+	@GetMapping("/wishlists/{customerId}")
+	public ResponseStructure<List<WishList>> fetchWishLists(@PathVariable int customerId) {
+		return wishListService.fetchWishLists(customerId);
+	}
+
+	@GetMapping("wishlists/products/{wishListId}")
+	public ResponseStructure<List<Product>> fetchProductsByWishListID(@PathVariable int wishListId) {
+		return wishListService.fetchProductsByWishListID(wishListId);
+	}
+
+	@DeleteMapping("wishlists/{wishListId}/{productId}")
+	public ResponseStructure<List<Product>> removeProductInWishListById(@PathVariable int wishListId,
+			@PathVariable int productId) {
+		return wishListService.removeProductInWishListById(wishListId, productId);
+	}
 }

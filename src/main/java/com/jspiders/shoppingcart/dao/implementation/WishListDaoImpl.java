@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jspiders.shoppingcart.dao.WishListDao;
+import com.jspiders.shoppingcart.dto.Product;
 import com.jspiders.shoppingcart.dto.WishList;
 import com.jspiders.shoppingcart.repository.WishListRepository;
 
@@ -20,8 +21,19 @@ public class WishListDaoImpl implements WishListDao {
 	}
 
 	@Override
-	public Optional<WishList> findWishListById(int wishListId) {
-		return wishListRepository.findById(wishListId);
+	public WishList findWishListById(int wishListId) {
+		Optional<WishList> wishOptional = wishListRepository.findById(wishListId);
+		return wishOptional.get();
 	}
 
+	@Override
+	public WishList updateWishList(WishList wishList) {
+		return wishListRepository.save(wishList);
+	}
+
+	@Override
+	public WishList fetchProductsByWishListID(int wishListId) {
+		Optional<WishList> optional = wishListRepository.findById(wishListId);
+		return optional.get();
+	}
 }
